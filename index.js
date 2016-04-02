@@ -3,12 +3,24 @@
 var express = require('express');
 var fs = require('fs');
 var glob = require('glob');
+var cors = require('cors');
+var gpio = require('rpi-gpio');
 
 var app = express();
+
+app.use(cors());
 
 app.get('/', function (req, res) {
   TemperatureSensorReader.listSensors(function (sensors) {
     res.send(sensors);
+  });
+});
+
+app.get('/movement', function (req, res) {
+  var movementSensor = new MovementSensorReader();
+  //movementSensor.init(); <-- make promise based and remove setup from detectMovement
+  movementSensor.detectMovement(function (movementDetected) {
+    res.send(movementDetected);
   });
 });
 
@@ -27,7 +39,7 @@ app.get('/:id/', function (req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log('API listening on port 3000!');
 });
 
 class TemperatureSensorReader {
@@ -56,5 +68,26 @@ class TemperatureSensorReader {
 
       cb(temp);
     });
+  }
+}
+
+class MovementSensorReader {
+  getGPIOPin() {
+    return 23;
+  }
+
+  /*init() {
+    gpio.setup(this.getGPIOPin(), gpio.DIR_IN);
+  }*/
+
+  detectMovement(cb) {
+    gpio.setup(this.getGPIOPin(), gpio.DIR_IN, () => {
+      gpio.read(this.getGPIOPin(), (err, value) => {
+        console.log('err: ' + err);
+        console.log('read value: ' + value);
+        cb('The value is ' + value);
+      });
+    });
+
   }
 }
