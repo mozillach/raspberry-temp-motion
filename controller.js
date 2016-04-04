@@ -1,8 +1,8 @@
 'use strict'
 
-var async = require('async');
-var TemperatureSensor = require('./temperature-sensor.js');
-var MovementSensor = require('./movement-sensor.js');
+let async = require('async');
+let TemperatureSensor = require('./temperature-sensor.js');
+let MovementSensor = require('./movement-sensor.js');
 
 class Controller {
   constructor() {
@@ -22,13 +22,12 @@ class Controller {
   }
 
   attachTemperatureInterval() {
-    var attachedIntervals = [];
-    var self = this;
+    let attachedIntervals = [];
 
-    TemperatureSensor.listSensors((sensors) => {
+    TemperatureSensor.listSensors().then((sensors) => {
       sensors.forEach((sensorName) => {
-        var sensor = new TemperatureSensor(sensorName);
-        self.attachedTempSensors.push(sensor);
+        let sensor = new TemperatureSensor(sensorName);
+        this.attachedTempSensors.push(sensor);
 
         setInterval(() => {
           this.handleTemperature();
@@ -38,8 +37,8 @@ class Controller {
   }
 
   handleTemperature() {
-    async.eachSeries(this.attachedTempSensors, (sensor, callback) => {
-      sensor.getTemperature(function (temp) {
+    async.each(this.attachedTempSensors, (sensor, callback) => {
+      sensor.getTemperature().then((temp) => {
         sensor.lastTemperature = temp;
         callback();
       });
@@ -48,7 +47,7 @@ class Controller {
         console.log(err);
       }
 
-      var difference = Math.abs(this.attachedTempSensors[0].lastTemperature - this.attachedTempSensors[1].lastTemperature);
+      let difference = Math.abs(this.attachedTempSensors[0].lastTemperature - this.attachedTempSensors[1].lastTemperature);
 
       // TODO: fix me, since we're doing this twice
       // TODO: in which period should we send out alarms?
@@ -61,7 +60,7 @@ class Controller {
   }
 
   handleMovement() {
-    this.movementSensor.detectMovement(function (movement) {
+    this.movementSensor.detectMovement().then((movement) => {
       console.log('Movement: ' + movement);
 
       // TODO: fix me, since we don't want to send out an alarm every time
@@ -70,7 +69,7 @@ class Controller {
       } else {
         console.log('we dont have movement');
       }
-    })
+    });
   }
 }
 

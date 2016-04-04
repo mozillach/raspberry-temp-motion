@@ -1,17 +1,21 @@
 'use strict'
 
-var fs = require('fs');
+let fs = require('fs');
 
 class MovementSensor {
   constructor(pin) {
     this.pin = pin;
   }
 
-  detectMovement(cb) {
-    var sensorInfoPath = '/sys/class/gpio/gpio23/value';
-    fs.readFile(sensorInfoPath, 'utf8', function (err, data) {
-      cb(data);
+  detectMovement() {
+    let promise = new Promise((resolve, reject) => {
+      let sensorInfoPath = '/sys/class/gpio/gpio23/value';
+      fs.readFile(sensorInfoPath, 'utf8', (err, data) => {
+        resolve(data);
+      });
     });
+
+    return promise;
   }
 }
 

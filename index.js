@@ -1,34 +1,34 @@
 'use strict'
 
-var express = require('express');
-var cors = require('cors');
-var TemperatureSensor = require('./temperature-sensor.js');
-var MovementSensor = require('./movement-sensor.js');
-var Controller = require('./controller.js');
+let express = require('express');
+let cors = require('cors');
+let TemperatureSensor = require('./temperature-sensor.js');
+let MovementSensor = require('./movement-sensor.js');
+let Controller = require('./controller.js');
 
-var app = express();
+let app = express();
 
 app.use(cors());
 
-app.get('/', function (req, res) {
-  TemperatureSensor.listSensors(function (sensors) {
+app.get('/', (req, res) => {
+  TemperatureSensor.listSensors().then((sensors) => {
     res.send(sensors);
   });
 });
 
-app.get('/movement', function (req, res) {
-  var movementSensor = new MovementSensor(23);
-  movementSensor.detectMovement(function (movementDetected) {
+app.get('/movement', (req, res) => {
+  let movementSensor = new MovementSensor(23);
+  movementSensor.detectMovement().then((movementDetected) => {
     res.send(movementDetected);
   });
 });
 
-app.get('/:id/', function (req, res) {
-  var name = req.params.id;
-  var tempSensor = new TemperatureSensor(name);
+app.get('/:id/', (req, res) => {
+  let name = req.params.id;
+  let tempSensor = new TemperatureSensor(name);
 
-  tempSensor.getTemperature(function (temperature) {
-    var response = {
+  tempSensor.getTemperature().then((temperature) => {
+    let response = {
       date: new Date(),
       temp: temperature
     };
@@ -37,9 +37,9 @@ app.get('/:id/', function (req, res) {
   });
 });
 
-app.listen(3000, function () {
+app.listen(3000, () => {
   console.log('API listening on port 3000!');
 });
 
 // Init Controller
-var controller = new Controller();
+let controller = new Controller();
