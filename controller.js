@@ -1,8 +1,8 @@
 'use strict'
 
 let async = require('async');
-let TemperatureSensor = require('./temperature-sensor.js');
-let MovementSensor = require('./movement-sensor.js');
+let TemperatureSensor = require('./temperature-sensor');
+let MovementSensor = require('./movement-sensor');
 
 class Controller {
   constructor() {

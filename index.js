@@ -2,9 +2,9 @@
 
 let express = require('express');
 let cors = require('cors');
-let TemperatureSensor = require('./temperature-sensor.js');
-let MovementSensor = require('./movement-sensor.js');
-let Controller = require('./controller.js');
+let TemperatureSensor = require('./temperature-sensor');
+let MovementSensor = require('./movement-sensor');
+let Controller = require('./controller');
 
 let app = express();
 
