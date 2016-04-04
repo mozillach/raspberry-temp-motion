@@ -1,6 +1,6 @@
 'use strict'
 
-var gpio = require('rpi-gpio');
+var fs = require('fs');
 
 class MovementSensor {
   constructor(pin) {
@@ -8,14 +8,10 @@ class MovementSensor {
   }
 
   detectMovement(cb) {
-    gpio.setup(this.pin, gpio.DIR_IN, () => {
-      gpio.read(this.pin, (err, value) => {
-        console.log('err: ' + err);
-        console.log('read value: ' + value);
-        cb('The value is ' + value);
-      });
+    var sensorInfoPath = '/sys/class/gpio/gpio23/value';
+    fs.readFile(sensorInfoPath, 'utf8', function (err, data) {
+      cb(data);
     });
-
   }
 }
 

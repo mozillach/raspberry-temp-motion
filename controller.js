@@ -9,13 +9,16 @@ class Controller {
     console.log('setting up Controller');
 
     this.attachedTempSensors = [];
+    this.movementSensor = new MovementSensor(23);
 
     this.attachTemperatureInterval();
     this.attachMovementInterval();
   }
 
   attachMovementInterval() {
-    console.log('movement attached');
+    setInterval(() => {
+      this.handleMovement();
+    }, 2000);
   }
 
   attachTemperatureInterval() {
@@ -55,6 +58,19 @@ class Controller {
         console.log('WE NEED TO SEND OUT AN ALARM!!!');
       }
     });
+  }
+
+  handleMovement() {
+    this.movementSensor.detectMovement(function (movement) {
+      console.log('Movement: ' + movement);
+
+      // TODO: fix me, since we don't want to send out an alarm every time
+      if (movement == 1) {
+        console.log('we have movement!!');
+      } else {
+        console.log('we dont have movement');
+      }
+    })
   }
 }
 
