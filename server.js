@@ -14,8 +14,6 @@ MongoClient.connect(url, (err, db) => {
 
   pingCollection = db.collection('pings');
   alarmCollection = db.collection('alarms');
-
-  db.close();
 });
 
 let app = express();
@@ -32,8 +30,6 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/ping', (req, res) => {
-  console.log('got..');
-  console.log(req.body.data);
   var data = JSON.parse(req.body.data);
   pingCollection.insert(data, (err, result) => {
     if (err) {

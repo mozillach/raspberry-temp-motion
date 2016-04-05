@@ -35,7 +35,9 @@ class RESTConnector {
       let postData = {
         data: paket
       };
-console.log(postData);
+
+      postData = JSON.stringify(postData);
+
       let options = {
         hostname: this.baseURL,
         port: this.port,
@@ -46,21 +48,19 @@ console.log(postData);
           'Content-Length': postData.length
         }
       };
-console.log('before request......');
+
       let requestToSend = http.request(options, (res) => {
         res.on('end', () => {
-          console.log('No more data in response.');
           resolve();
         });
       });
-console.log('before error......');
+
       requestToSend.on('error', (err) => {
         console.log('problem with request:' + err.message);
         reject();
       });
-console.log('before write.....');
+
       requestToSend.write(postData);
-      console.log('after write.......');
       requestToSend.end();
     });
 
