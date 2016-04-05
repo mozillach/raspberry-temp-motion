@@ -8,6 +8,7 @@ class Controller {
   constructor() {
     console.log('setting up Controller');
 
+    this.attachedTempInterval = null;
     this.attachedTempSensors = [];
     this.movementSensor = new MovementSensor(23);
 
@@ -22,17 +23,17 @@ class Controller {
   }
 
   attachTemperatureInterval() {
-    let attachedIntervals = [];
-
     TemperatureSensor.listSensors().then((sensors) => {
       sensors.forEach((sensorName) => {
         let sensor = new TemperatureSensor(sensorName);
         this.attachedTempSensors.push(sensor);
+      });
 
-        setInterval(() => {
-          this.handleTemperature();
-        }, 5000);
-      })
+      var tempInterval = setInterval(() => {
+        this.handleTemperature();
+      }, 5000);
+
+      this.attachedTempInterval = tempInterval;
     });
   }
 
@@ -49,7 +50,6 @@ class Controller {
 
       let difference = Math.abs(this.attachedTempSensors[0].lastTemperature - this.attachedTempSensors[1].lastTemperature);
 
-      // TODO: fix me, since we're doing this twice
       // TODO: in which period should we send out alarms?
       console.log('Difference: ' + difference);
 
