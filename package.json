@@ -18,9 +18,13 @@
   "homepage": "https://github.com/MichaelKohler/raspberry-temp-motion#readme",
   "dependencies": {
     "async": "^2.0.0-rc.2",
+    "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "express": "^4.13.4",
     "fs-extra": "^0.26.7",
-    "glob": "^7.0.3"
+    "glob": "^7.0.3",
+    "mongodb": "^2.1.14",
+    "querystring": "^0.2.0",
+    "request": "^2.70.0"
   }
 }

@@ -3,14 +3,19 @@
 let async = require('async');
 let TemperatureSensor = require('./temperature-sensor');
 let MovementSensor = require('./movement-sensor');
+let RESTConnector = require('./rest-connector');
+let TemperatureData = require('./temperature-data');
 
 class Controller {
   constructor() {
     console.log('setting up Controller');
 
+    this.criticalTemp = 27;
+    this.alarmTempDifference = 5;
     this.attachedTempInterval = null;
     this.attachedTempSensors = [];
     this.movementSensor = new MovementSensor(23);
+    this.restConnector = new RESTConnector('192.168.0.10', 8000);
 
     this.attachTemperatureInterval();
     this.attachMovementInterval();
@@ -48,14 +53,18 @@ class Controller {
         console.log(err);
       }
 
-      let difference = Math.abs(this.attachedTempSensors[0].lastTemperature - this.attachedTempSensors[1].lastTemperature);
+      let temp = this.attachedTempSensors[0].lastTemperature;
+      let temp2 = this.attachedTempSensors[1].lastTemperature;
+      let difference = Math.abs(temp - temp2);
+      let isCritical = temp > this.criticalTemp && temp2 > this.criticalTemp;
 
-      // TODO: in which period should we send out alarms?
       console.log('Difference: ' + difference);
-
-      if (difference > 5) {
-        console.log('WE NEED TO SEND OUT AN ALARM!!!');
-      }
+      let ping = new TemperatureData(temp, temp2, difference, isCritical);
+      this.restConnector.sendPing(ping).then(() => {
+        if (difference > this.alarmTempDifference) {
+          console.log('WE NEED TO SEND AN ALARM!!');
+        }
+      });
     });
   }
 
