@@ -50,7 +50,12 @@ class RESTConnector {
       };
 
       let requestToSend = http.request(options, (res) => {
+        res.on('data', (chunk) => {
+          console.log('Received: ' + chunk);
+        });
+
         res.on('end', () => {
+          console.log('Ping saved!');
           resolve();
         });
       });

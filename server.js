@@ -30,6 +30,7 @@ app.get('/ping', (req, res) => {
 });
 
 app.post('/ping', (req, res) => {
+  console.log('API got a Ping!');
   var data = JSON.parse(req.body.data);
   pingCollection.insert(data, (err, result) => {
     if (err) {
@@ -45,7 +46,15 @@ app.get('/alarm', (req, res) => {
 });
 
 app.post('/alarm', (req, res) => {
-  res.send('used to save alarm');
+  console.log('API got an Alarm!');
+  var data = JSON.parse(req.body.data);
+  alarmCollection.insert(data, (err, result) => {
+    if (err) {
+      console.log('ERROR: ' + err);
+    }
+
+    res.send(result);
+  });
 });
 
 app.listen(8000, () => {

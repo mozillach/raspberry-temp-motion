@@ -5,6 +5,7 @@ let TemperatureSensor = require('./temperature-sensor');
 let MovementSensor = require('./movement-sensor');
 let RESTConnector = require('./rest-connector');
 let TemperatureData = require('./temperature-data');
+let Alarm = require('./alarm');
 
 class Controller {
   constructor() {
@@ -61,9 +62,24 @@ class Controller {
       console.log('Difference: ' + difference);
       let ping = new TemperatureData(temp, temp2, difference, isCritical);
       this.restConnector.sendPing(ping).then(() => {
+        console.log('Ping saved!');
         if (difference > this.alarmTempDifference) {
-          console.log('WE NEED TO SEND AN ALARM!!');
+          console.log('The difference was higher than expected!');
+          let alarm = new Alarm('difference', 0, false, ping);
+          return this.restConnector.sendAlarm(alarm);
         }
+
+        return new Promise((resolve, reject) => { resolve() });
+      })
+      .then(() => {
+        if (isCritical) {
+          console.log('It is critical!!');
+          let alarm = new Alarm('high', 1, false, ping);
+          return this.restConnector.sendAlarm(alarm);
+        }
+      })
+      .then(() => {
+        console.log('All necessary alarms were sent or there is nothing to do..');
       });
     });
   }
