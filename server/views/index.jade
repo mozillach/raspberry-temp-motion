@@ -6,6 +6,9 @@ html
   
     h3 Working? #{working}
   
+    button(id="movementButton") Disable Movement
+    button(id="temperatureButton") Disable Temperature
+  
     main
   
       #temp
@@ -38,3 +41,5 @@ html
               td #{alarm.type}
               td #{alarm.priority}
               td #{alarm.confirmed} 
+
+    script(src="/app.js")

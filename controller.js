@@ -15,6 +15,7 @@ class Controller {
     this.alarmTempDifference = 5;
     this.attachedTempInterval = null;
     this.attachedTempSensors = [];
+    this.attachedMovementInterval = null;
     this.movementSensor = new MovementSensor(23);
     this.restConnector = new RESTConnector('192.168.0.10', 8000);
 
@@ -23,9 +24,11 @@ class Controller {
   }
 
   attachMovementInterval() {
-    setInterval(() => {
+    let movementInterval = setInterval(() => {
       this.handleMovement();
     }, 2000);
+
+    this.attachedMovementInterval = movementInterval;
   }
 
   attachTemperatureInterval() {
@@ -109,6 +112,34 @@ class Controller {
       let alarm = new Alarm('movement_not_working', 1, false, {});
       return this.restConnector.sendAlarm(alarm);
     });
+  }
+
+  toggleMovementMeasurement(active) {
+    if (active === 'true') {
+      this.attachMovementInterval();
+    } else if (active === 'false') {
+      this.detachMovementInterval();
+    }
+  }
+
+  toggleTemperatureMeasurement(active) {
+    if (active === 'true') {
+      this.attachTemperatureInterval();
+    } else if (active === 'false') {
+      this.detachTemperatureInterval();
+    }
+  }
+
+  detachTemperatureInterval() {
+    console.log('Detaching Temperature Interval');
+    clearInterval(this.attachedTempInterval);
+    this.attachedTempInterval = 0;
+  }
+
+  detachMovementInterval() {
+    console.log('Detaching Movement Interval');
+    clearInterval(this.attachedMovementInterval);
+    this.attachedMovementInterval = 0;
   }
 }
 

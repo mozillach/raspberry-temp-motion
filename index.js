@@ -2,12 +2,18 @@
 
 let express = require('express');
 let cors = require('cors');
+let bodyParser = require('body-parser');
 let TemperatureSensor = require('./temperature-sensor');
 let MovementSensor = require('./movement-sensor');
 let Controller = require('./controller');
 
+// Init Controller
+let controller = new Controller();
+
+// Init API
 let app = express();
 
+app.use(bodyParser.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
@@ -37,9 +43,19 @@ app.get('/:id/', (req, res) => {
   });
 });
 
+app.get('/status/:active/:type', (req, res) => {
+  let active = req.params.active;
+  let type = req.params.type;
+
+  if (type === 'movement') {
+    controller.toggleMovementMeasurement(active);
+  } else if (type === 'temperature') {
+    controller.toggleTemperatureMeasurement(active);
+  }
+
+  res.send({});
+});
+
 app.listen(3000, () => {
   console.log('API listening on port 3000!');
 });
-
-// Init Controller
-let controller = new Controller();
