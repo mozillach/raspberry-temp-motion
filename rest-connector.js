@@ -6,6 +6,7 @@ class RESTConnector {
   constructor(baseURL, port) {
     this.baseURL = baseURL;
     this.port = port;
+    this.lastSentAlarmTime = 0;
   }
 
   sendPing(ping) {
@@ -19,8 +20,16 @@ class RESTConnector {
   }
 
   sendAlarm(alarm) {
+    // We should only send a new alarm in case the last alarm was more than
+    // 10 minutes ago (= 10*60*1000 ms = 600'000 ms)
+    let currentTime = Date.now();
+    if (currentTime - this.lastSentAlarmTime < 600000) {
+      return new Promise((resolve, reject) => { resolve(); });
+    }
+
     let promise = new Promise((resolve, reject) => {
       this.sendPOST(JSON.stringify(alarm), '/alarm').then(() => {
+        this.lastSentAlarmTime = Date.now();
         resolve();
       });
     });

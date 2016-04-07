@@ -93,9 +93,7 @@ class Controller {
       // TODO: fix me, since we don't want to send out an alarm every time
       if (movement == 1) {
         console.log('we have movement!!');
-        let alarm = new Alarm('movement', 1, false, {
-          movement: true
-        });
+        let alarm = new Alarm('movement', 1, false, {});
         return this.restConnector.sendAlarm(alarm);
       } else {
         console.log('we dont have movement');

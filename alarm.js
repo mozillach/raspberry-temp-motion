@@ -2,6 +2,7 @@
 
 class Alarm {
   constructor(type, priority, confirmed, data) {
+    this.timestamp = new Date();
     this.type = type;
     this.priority = priority;
     this.confirmed = confirmed;
