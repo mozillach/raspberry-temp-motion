@@ -35,9 +35,10 @@ class Controller {
         this.attachedTempSensors.push(sensor);
       });
 
+      // Analyze the temperature every 3 minutes (= 3*60*1000 = 180000)
       var tempInterval = setInterval(() => {
         this.handleTemperature();
-      }, 5000);
+      }, 180000);
 
       this.attachedTempInterval = tempInterval;
     });
