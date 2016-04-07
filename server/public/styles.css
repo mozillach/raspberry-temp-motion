@@ -1,0 +1,15 @@
+body {
+  font-family: sans-serif;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 0 100px 0 50px;
+}
+
+alarms {
+  flex-grow: 3;
+}

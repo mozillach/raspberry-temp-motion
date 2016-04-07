@@ -23,6 +23,7 @@
     "express": "^4.13.4",
     "fs-extra": "^0.26.7",
     "glob": "^7.0.3",
+    "jade": "^1.11.0",
     "mongodb": "^2.1.14",
     "querystring": "^0.2.0",
     "request": "^2.70.0"

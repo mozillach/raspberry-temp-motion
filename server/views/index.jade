@@ -1,0 +1,38 @@
+html
+  head
+    link(rel="stylesheet" href="/styles.css")
+  body
+    h1 Raspberry Pi - Temperature/Movement Backend
+  
+    main
+  
+      #temp
+        h2 Temperature
+        
+        h3 Zeit
+        p #{new Date(ping.timestamp)}
+        
+        h3 Temperatures
+        p #{ping.temp} / #{ping.temp2}
+
+        #difference
+          h3 Difference
+          p #{ping.difference}
+
+      #alarms
+        h2 Alarms
+        p Last 10 alarms:
+        
+        table
+          th
+            tr
+              td Timestamp
+              td Type
+              td Priority
+              td Confirmed?
+          each alarm in alarms
+            tr
+              td #{new Date(alarm.timestamp)}
+              td #{alarm.type}
+              td #{alarm.priority}
+              td #{alarm.confirmed} 

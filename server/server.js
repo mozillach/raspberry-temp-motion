@@ -3,6 +3,8 @@
 let express = require('express');
 let cors = require('cors');
 let bodyParser = require('body-parser');
+var path = require('path');
+var jade = require('jade');
 let MongoClient = require('mongodb').MongoClient;
 
 let pingCollection = null;
@@ -20,13 +22,27 @@ let app = express();
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 
 app.get('/', (req, res) => {
-  res.send('Main overview');
-});
+  let ping;
+  let alarms = [];
 
-app.get('/ping', (req, res) => {
+  pingCollection.find({}).sort({
+    timestamp: -1
+  }).limit(1).toArray(function(err, pingItems) {
+    ping = pingItems[0];
 
+    alarmCollection.find({}).sort({
+      timestamp: -1
+    }).limit(10).toArray(function(err, alarmItems) {
+      alarms = alarmItems;
+
+      res.render('index', { alarms: alarms, ping: ping });
+    });;
+  });;
 });
 
 app.post('/ping', (req, res) => {
@@ -39,10 +55,6 @@ app.post('/ping', (req, res) => {
 
     res.send(result);
   });
-});
-
-app.get('/alarm', (req, res) => {
-  res.send('used to get alarms');
 });
 
 app.post('/alarm', (req, res) => {
