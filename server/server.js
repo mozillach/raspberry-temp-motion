@@ -40,7 +40,18 @@ app.get('/', (req, res) => {
     }).limit(10).toArray(function(err, alarmItems) {
       alarms = alarmItems;
 
-      res.render('index', { alarms: alarms, ping: ping });
+      let working = true;
+      let lastPingDate = new Date(ping.timestamp)
+      let lastPing = lastPingDate.getTime();
+      let currentTime = Date.now();
+
+      // It might not be working if we didn't receive a ping in the last 30 minutes
+      // = 30 * 60 = 1800 s
+      if (currentTime - lastPing > 1800000) {
+        working = false;
+      }
+
+      res.render('index', { alarms: alarms, ping: ping, working: working });
     });;
   });;
 });
