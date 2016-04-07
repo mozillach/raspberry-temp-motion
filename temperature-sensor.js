@@ -33,14 +33,14 @@ class TemperatureSensor {
         let reg = /t\=[0-9]{5}/;
         let match = reg.exec(data);
 
-        if (match[0]) {
+        if (match && match[0]) {
           temp = match[0].split('=')[1];
           temp = parseInt(temp, 10);
           temp = temp / 1000;
 
           resolve(temp);
         } else {
-          reject();
+          reject(new Error('Could not read sensor ' + this.name));
         }
       });
     });

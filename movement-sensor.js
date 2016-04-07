@@ -11,6 +11,10 @@ class MovementSensor {
     let promise = new Promise((resolve, reject) => {
       let sensorInfoPath = '/sys/class/gpio/gpio23/value';
       fs.readFile(sensorInfoPath, 'utf8', (err, data) => {
+        if (err) {
+          reject(err);
+        }
+
         resolve(data);
       });
     });

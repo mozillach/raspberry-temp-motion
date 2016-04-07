@@ -22,8 +22,10 @@ class RESTConnector {
   sendAlarm(alarm) {
     // We should only send a new alarm in case the last alarm was more than
     // 10 minutes ago (= 10*60*1000 ms = 600'000 ms)
+    // Further, if the priority is higher than 1 (2 and above), we need to send
+    // the alarm any time!
     let currentTime = Date.now();
-    if (currentTime - this.lastSentAlarmTime < 600000) {
+    if (alarm.priority < 2 && currentTime - this.lastSentAlarmTime < 600000) {
       return new Promise((resolve, reject) => { resolve(); });
     }
 

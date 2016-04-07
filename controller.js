@@ -30,6 +30,7 @@ class Controller {
 
   attachTemperatureInterval() {
     TemperatureSensor.listSensors().then((sensors) => {
+      console.log(sensors);
       sensors.forEach((sensorName) => {
         let sensor = new TemperatureSensor(sensorName);
         this.attachedTempSensors.push(sensor);
@@ -54,7 +55,9 @@ class Controller {
       });
     }, (err) => {
       if (err) {
-        console.log(err);
+        console.log('Temperature not working!!!!');
+        let alarm = new Alarm('temp_not_working', 2, false, {});
+        return this.restConnector.sendAlarm(alarm);
       }
 
       let temp = this.attachedTempSensors[0].lastTemperature;
@@ -101,6 +104,10 @@ class Controller {
       }
     }).then(() => {
       console.log('All necessary alarms sent.');
+    }).catch((err) => {
+      console.log('Movement not working!!!!');
+      let alarm = new Alarm('movement_not_working', 1, false, {});
+      return this.restConnector.sendAlarm(alarm);
     });
   }
 }
