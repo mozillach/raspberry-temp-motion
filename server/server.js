@@ -3,8 +3,8 @@
 let express = require('express');
 let cors = require('cors');
 let bodyParser = require('body-parser');
-var path = require('path');
-var jade = require('jade');
+let path = require('path');
+let jade = require('jade');
 let MongoClient = require('mongodb').MongoClient;
 
 let pingCollection = null;
@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 
 app.post('/ping', (req, res) => {
   console.log('API got a Ping!');
-  var data = JSON.parse(req.body.data);
+  let data = JSON.parse(req.body.data);
   pingCollection.insert(data, (err, result) => {
     if (err) {
       console.log('ERROR: ' + err);
@@ -70,7 +70,7 @@ app.post('/ping', (req, res) => {
 
 app.post('/alarm', (req, res) => {
   console.log('API got an Alarm!');
-  var data = JSON.parse(req.body.data);
+  let data = JSON.parse(req.body.data);
   alarmCollection.insert(data, (err, result) => {
     if (err) {
       console.log('ERROR: ' + err);
