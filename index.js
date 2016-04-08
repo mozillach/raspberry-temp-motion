@@ -56,6 +56,25 @@ app.get('/status/:active/:type', (req, res) => {
   res.send({});
 });
 
+app.get('/confirm/:id', (req, res) => {
+  let id = req.params.id;
+
+  let unsentAlarms = controller.restConnector.sentAlarms.filter((alarm) => {
+    return !alarm.confirmed;
+  });
+
+  unsentAlarms.forEach((alarm) => {
+    if (alarm.id === id) {
+      alarm.confirm();
+    }
+  });
+
+  console.log('Alarm with ID ' + id + ' confirmed.');
+  console.log('Other unconfirmed alarms: ', unsentAlarms);
+
+  res.send({});
+});
+
 app.listen(3000, () => {
   console.log('API listening on port 3000!');
 });

@@ -1,12 +1,14 @@
 'use strict'
 
 let http = require('http');
+let async = require('async');
 
 class RESTConnector {
   constructor(baseURL, port) {
     this.baseURL = baseURL;
     this.port = port;
     this.lastSentAlarmTime = 0;
+    this.sentAlarms = [];
   }
 
   sendPing(ping) {
@@ -32,6 +34,35 @@ class RESTConnector {
     let promise = new Promise((resolve, reject) => {
       this.sendPOST(JSON.stringify(alarm), '/alarm').then(() => {
         this.lastSentAlarmTime = Date.now();
+        this.sentAlarms.push(alarm);
+        console.log('Last time: ' + this.lastSentAlarmTime);
+        console.log('Alarm ' + alarm.id + ' sent!');
+        console.log(this.sentAlarms);
+        resolve();
+      });
+    });
+
+    return promise;
+  }
+
+  resendAlarms() {
+    console.log('Starting to resend alarms!');
+
+    let unsentAlarms = this.sentAlarms.filter((alarm) => {
+      return !alarm.confirmed;
+    });
+
+    let promise = new Promise((resolve, reject) => {
+      async.each(unsentAlarms, (alarm, callback) => {
+        this.sendPOST(JSON.stringify(alarm), '/alarm').then(() => {
+          callback();
+        });
+      }, (err) => {
+        if (err) {
+          console.log('There was an error resending the alarms.');
+        }
+
+        console.log('All alarms resent!');
         resolve();
       });
     });

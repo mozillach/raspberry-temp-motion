@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/MichaelKohler/raspberry-temp-motion#readme",
   "dependencies": {
-    "async": "^2.0.0-rc.2",
+    "async": "^2.0.0-rc.3",
     "body-parser": "^1.15.0",
     "cors": "^2.7.1",
     "express": "^4.13.4",

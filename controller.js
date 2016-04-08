@@ -21,6 +21,7 @@ class Controller {
 
     this.attachTemperatureInterval();
     this.attachMovementInterval();
+    this.attachResendAlarmInterval();
   }
 
   attachMovementInterval() {
@@ -109,6 +110,7 @@ class Controller {
       console.log('All necessary alarms sent.');
     }).catch((err) => {
       console.log('Movement not working!!!!');
+      console.log(err);
       let alarm = new Alarm('movement_not_working', 1, false, {});
       return this.restConnector.sendAlarm(alarm);
     });
@@ -140,6 +142,12 @@ class Controller {
     console.log('Detaching Movement Interval');
     clearInterval(this.attachedMovementInterval);
     this.attachedMovementInterval = 0;
+  }
+
+  attachResendAlarmInterval() {
+    setInterval(() => {
+      this.restConnector.resendAlarms();
+    }, 60000);
   }
 }
 
