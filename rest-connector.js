@@ -26,8 +26,11 @@ class RESTConnector {
     // 10 minutes ago (= 10*60*1000 ms = 600'000 ms)
     // Further, if the priority is higher than 1 (2 and above), we need to send
     // the alarm any time!
+    // We need to exclude the temperature alarm in this case, since we want to send
+    // an alarm every time the difference is too big.
     let currentTime = Date.now();
-    if (alarm.priority < 2 && currentTime - this.lastSentAlarmTime < 600000) {
+    if (alarm.type !== 'difference' && alarm.type !== 'high' && alarm.priority < 2 && currentTime - this.lastSentAlarmTime < 600000) {
+      console.log('NOT SENDING ALARM SINCE IT HASNT BEEN 10 MINUTES');
       return new Promise((resolve, reject) => { resolve(); });
     }
 
@@ -35,7 +38,6 @@ class RESTConnector {
       this.sendPOST(JSON.stringify(alarm), '/alarm').then(() => {
         this.lastSentAlarmTime = Date.now();
         this.sentAlarms.push(alarm);
-        console.log('Last time: ' + this.lastSentAlarmTime);
         console.log('Alarm ' + alarm.id + ' sent!');
         console.log(this.sentAlarms);
         resolve();

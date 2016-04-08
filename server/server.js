@@ -83,7 +83,7 @@ app.post('/alarm', (req, res) => {
 app.get('/confirm/:alarmId', (req, res) => {
   let alarmId = req.params.alarmId;
 
-  alarmCollection.update({ id: alarmId }, { $set: { confirmed: true }}, (err, result) => {
+  alarmCollection.update({ id: alarmId }, { $set: { confirmed: true }}, { multi: true }, (err, result) => {
     if (err) {
       console.log('ERROR: ' + err);
     }
