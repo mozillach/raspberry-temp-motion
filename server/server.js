@@ -80,6 +80,18 @@ app.post('/alarm', (req, res) => {
   });
 });
 
+app.get('/confirm/:alarmId', (req, res) => {
+  let alarmId = req.params.alarmId;
+
+  alarmCollection.update({ id: alarmId }, { $set: { confirmed: true }}, (err, result) => {
+    if (err) {
+      console.log('ERROR: ' + err);
+    }
+
+    res.send(result);
+  });
+});
+
 app.listen(8000, () => {
   console.log('API listening on port 8000!');
 });

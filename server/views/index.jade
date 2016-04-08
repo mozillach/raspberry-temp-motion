@@ -40,6 +40,9 @@ html
               td #{new Date(alarm.timestamp)}
               td #{alarm.type}
               td #{alarm.priority}
-              td #{alarm.confirmed} 
+              td #{alarm.confirmed}
+              td
+                if !alarm.confirmed
+                  button(onclick="confirmAlarm('#{alarm.id}');") Confirm
 
     script(src="/app.js")
